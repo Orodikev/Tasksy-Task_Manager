@@ -1,0 +1,34 @@
+{
+  "name": "tasksy-task_manager",
+  "version": "1.0.0",
+  "description": "TaskSy - A Task Management System Portfolio Project for ALX Software Engineering",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start-dev": "nodemon server.js",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "KEVIN OTIENO",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
+    "mongoose": "^8.9.2",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.26.4",
+    "@babel/core": "^7.26.0",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "eslint": "^9.17.0",
+    "nodemon": "^3.1.9"
+  }
+}
