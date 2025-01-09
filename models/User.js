@@ -1,32 +1,25 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-// Define the User schema with fields for user data
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true, // This field is mandatory
-    unique: true, // No two users can have the same username
-    trim: true, // Removes extra spaces
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
 });
 
-// Middleware to hash the password before saving it to the database
+// Password hashing before saving the user
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next(); // Skip if password hasn't changed
-  const salt = await bcrypt.genSalt(10); // Generate salt for hashing
-  this.password = await bcrypt.hash(this.password, salt); // Hash the password
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
   next();
 });
 
-module.exports = mongoose.model('User', userSchema); // Export the model
+// Token generation method
+userSchema.methods.generateAuthToken = function () {
+  const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  return token;
+};
+
+module.exports = mongoose.model('User', userSchema);
 

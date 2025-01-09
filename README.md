@@ -55,7 +55,7 @@ SendGrid API: For email notifications.
 Cron Jobs: For scheduling notifications or periodic tasks.
 Cloudinary: For storing task-related media files.
 Challenges Identified
-Building secure user authentication and session management.
+Building secure user authetication and session management.
 Efficiently managing large datasets using MongoDB.
 Designing a user-friendly API that can integrate with frontend clients.
 Handling real-time notifications and updates.

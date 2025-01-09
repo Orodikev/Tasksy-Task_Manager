@@ -2,9 +2,10 @@
   "name": "tasksy-task_manager",
   "version": "1.0.0",
   "description": "TaskSy - A Task Management System Portfolio Project for ALX Software Engineering",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watchAll",
     "start": "node server.js",
     "start-dev": "nodemon server.js",
     "lint": "eslint ."
@@ -14,21 +15,32 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
-    "mongoose": "^8.9.2",
-    "nodemailer": "^6.9.16"
+    "mongoose": "^8.9.3",
+    "nodemailer": "^6.9.16",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
     "@babel/core": "^7.26.0",
     "@babel/node": "^7.26.0",
+    "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.3",
+    "babel-jest": "^29.7.0",
     "eslint": "^9.17.0",
-    "nodemon": "^3.1.9"
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.3",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
   }
 }
