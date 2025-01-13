@@ -1,9 +1,9 @@
 const request = require('supertest');
 const app = require('../server');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const User = require('../models/User');
 const Task = require('../models/Task');
-const jwt = require('jsonwebtoken');
 
 // Extend timeout globally for this file
 jest.setTimeout(30000); // 30 seconds
@@ -15,20 +15,20 @@ let taskId;
 beforeAll(async () => {
   try {
     // Connect to MongoDB
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
 
-    // Mock user creation and authentication for the tests
-    const user = await User.create({
-      email: 'test@example.com',
-      password: 'password',
-    });
+    // Clear collections
+    await User.deleteMany();
+    await Task.deleteMany();
 
-    authToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // Create mock user and generate auth token
+    const user = new User({ email: 'test@example.com', password: 'password' });
+    await user.save();
+
+    authToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Ensure JWT_SECRET is set
   } catch (err) {
     console.error('Error during beforeAll setup:', err);
+    throw err; // Ensure tests fail if setup fails
   }
 });
 
@@ -57,6 +57,11 @@ describe('Task API Endpoints', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .send(taskData);
 
+    // Debugging log in case of failure
+    if (response.status !== 201) {
+      console.error('Create Task Error:', response.body);
+    }
+
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('task');
     taskId = response.body.task._id; // Store task ID for future use
@@ -67,6 +72,11 @@ describe('Task API Endpoints', () => {
     const response = await request(app)
       .get('/tasks')
       .set('Authorization', `Bearer ${authToken}`);
+
+    // Debugging log in case of failure
+    if (response.status !== 200) {
+      console.error('Fetch Tasks Error:', response.body);
+    }
 
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
@@ -87,6 +97,11 @@ describe('Task API Endpoints', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedData);
 
+    // Debugging log in case of failure
+    if (response.status !== 200) {
+      console.error('Update Task Error:', response.body);
+    }
+
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('task');
     expect(response.body.task.title).toBe(updatedData.title);
@@ -100,6 +115,11 @@ describe('Task API Endpoints', () => {
     const response = await request(app)
       .delete(`/tasks/${taskId}`)
       .set('Authorization', `Bearer ${authToken}`);
+
+    // Debugging log in case of failure
+    if (response.status !== 200) {
+      console.error('Delete Task Error:', response.body);
+    }
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('message', 'Task deleted successfully');
