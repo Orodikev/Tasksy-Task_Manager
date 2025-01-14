@@ -17,4 +17,3 @@ describe('Database Connection', () => {
     }
   });
 });
-
